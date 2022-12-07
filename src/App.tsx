@@ -21,7 +21,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          Hello Netlify from CircleCI sec2
+          Hello Netlify from CircleCI sec3
         </p>
       </div>
     </div>

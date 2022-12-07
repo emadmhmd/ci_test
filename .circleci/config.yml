@@ -16,7 +16,7 @@ commands:
             # when this file is changed, this key will fail
             - v1-dependencies-{{ checksum "package.json" }}
             # Find the most recently generated cache used from any branch
-            # - v1-dependencies-
+            - v1-dependencies-
       - run: 
           name: Install Client Dependencies
           command: yarn
@@ -66,6 +66,7 @@ workflows:
   build_deploy:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
+      - deploy
+      # - deploy:
+      #     requires:
+      #       - build
