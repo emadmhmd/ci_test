@@ -10,6 +10,7 @@
     "deploy": "netlify deploy --dir=./build -p -m 'git log -1 --pretty=%B'"
   },
   "dependencies": {
+    "netlify-cli": "^12.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
