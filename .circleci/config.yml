@@ -1,39 +1,69 @@
+# for more enhancement https://circleci.com/blog/six-optimization-tips-for-your-config/
+
 version: 2.1
 
+orbs:
+  node: circleci/node@4.1.0
+
+commands:
+  install:
+    description: "command for dependencies Installation"
+    steps:
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package.json checksum
+            # when this file is changed, this key will fail
+            - v1-dependencies-{{ checksum "package.json" }}
+            # Find the most recently generated cache used from any branch
+            - v1-dependencies-
+      - run: 
+          name: Install Client Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
 jobs:
+  build:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - node/install
+      - node/install-yarn
+      - checkout
+      - install
+      - run:
+          name: Build Client
+          command: yarn build
+
+  test:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - node/install
+      - node/install-yarn
+      - checkout
+      - install
+      - run: 
+          name: Test  
+          command: yarn test
+
   deploy:
     docker:
-      - image: cimg/node:16.10
+      - image: "cimg/base:stable"
     steps:
+      - node/install
+      - node/install-yarn
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-
+      - install
       - run:
-        name: Install Dependencies
-        command: npm install
-
-      - save_cache:
-        paths:
-          - node_modules
-        key:
-          - v1-dependencies-{{ checksum "package.json" }}
-
-      # - run:
-      #   name: Run Tests
-      #   command: yarn test
-      
-      - run:
-        name: Build
-        command: npm run build
-      
-      - run:
-        name: Deploy at netlify
-        command: yarn deploy
+          name: Deploy
+          command: yarn deploy
 
 workflows:
   build_deploy:
     jobs:
+      - build
       - deploy
