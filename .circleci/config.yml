@@ -65,6 +65,7 @@ jobs:
 workflows:
   build_deploy:
     jobs:
+      - test
       - build
       - deploy
       # - deploy:
