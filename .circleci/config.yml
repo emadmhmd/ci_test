@@ -61,11 +61,10 @@ jobs:
       - run:
           name: Deploy at netlify
           command: yarn deploy
-
+          
 workflows:
   build_deploy:
     jobs:
-      - test
       - build
       - deploy
       # - deploy:
